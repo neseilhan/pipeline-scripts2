@@ -1,0 +1,57 @@
+def job_name = "${env.JOB_NAME}".split('/')[0]
+
+def branch = "${env.JOB_NAME}".split('/')[1]
+
+def pipelineDirectory = "/var/jenkins_home/pipeline-scripts"
+
+ 
+
+pipeline {
+
+        agent any
+
+        options {
+
+                disableConcurrentBuilds()
+
+        }
+
+        stages {
+
+                stage('update pipeline') {
+
+                        steps {
+
+                                script {
+
+                                        sh "git -C " + pipelineDirectory + " fetch"
+
+                                        sh "git -C " + pipelineDirectory + " checkout -m ${branch}"
+
+                                        sh "git -C " + pipelineDirectory + " reset --hard origin/${branch}"
+
+                                }
+
+                        }
+
+                }
+
+stage('docker build') {
+
+                        steps {
+
+                                script {
+
+                                        sh "cp " + pipelineDirectory + "/${job_name}/Dockerfile ."
+
+                                        sh "docker build . --build-arg APPLICATION=${job_name} -t pia-tech/${job_name}:master-v${env.BUILD_ID}"
+
+                                }
+
+                        }
+
+                }
+
+          }
+
+  }
