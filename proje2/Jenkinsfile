@@ -2,7 +2,7 @@ def job_name = "${env.JOB_NAME}".split('/')[0]
 
 def branch = "${env.JOB_NAME}".split('/')[1]
 
-def pipelineDirectory = "/var/jenkins_home/pipeline-scripts2"
+def pipelineDirectory = "/var/jenkins_home/pipeline-scripts"
 
  
 
